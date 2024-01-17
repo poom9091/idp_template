@@ -16,12 +16,15 @@ spec:
     - title:
       required:
         - bucket_name
-        - build_repo
       properties:
         bucket_name:
           title: Buckek name
           type: string
           description: S3 bucket name
+        bucket_name:
+          title: Repo  
+          type: string
+          description: terraform repo 
 
     # - title: Pipeline setup
     #   properties:
