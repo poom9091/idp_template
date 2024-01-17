@@ -21,7 +21,7 @@ spec:
           title: Buckek name
           type: string
           description: S3 bucket name
-        bucket_name:
+        repoUrl:
           title: Repo  
           type: string
           description: terraform repo 
@@ -62,7 +62,7 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: This is ${{ parameters.name }}
+        description: This is ${{ parameters.bucket_name }}
         repoUrl: ${{ parameters.repoUrl }}
 
     # # The final step is to register our new component in the catalog.
