@@ -22,10 +22,6 @@ spec:
           title: Buckek name
           type: string
           description: S3 bucket name
-        build_repo:
-          title: Create repository
-          type: boolean
-          default: false
 
     # - title: Pipeline setup
     #   properties:
@@ -44,13 +40,11 @@ spec:
     #         - aws
 
   steps:
-    # Each step executes an action, in this case one templates files into the working directory.
     - id: http_test
-      name: Fetch http
+      name: Fetch terraform code 
       action: fetch:template
       input:
         url: ./content
-        targetPath: ./templates/outputs
         values:
           name: ${{ parameters.bucket_name }}
 
@@ -60,14 +54,13 @@ spec:
       input:
         listWorkspace: true
 
-    # # This step publishes the contents of the working directory to GitHub.
-    # - id: publish
-    #   name: Publish
-    #   action: publish:github
-    #   input:
-    #     allowedHosts: ['github.com']
-    #     description: This is ${{ parameters.name }}
-    #     repoUrl: ${{ parameters.repoUrl }}
+    - id: terraform_public
+      name: Publish
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: This is ${{ parameters.name }}
+        repoUrl: ${{ parameters.repoUrl }}
 
     # # The final step is to register our new component in the catalog.
     # - id: register
@@ -80,7 +73,7 @@ spec:
   # Outputs are displayed to the user after a successful execution of the template.
   output:
     links:
-      - title: Repository
+      - title: Code update 
         url: ${{ steps['publish'].output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
