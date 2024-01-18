@@ -59,7 +59,7 @@ spec:
 
     - id: terraform_public
       name: Publish
-      action: publish:github:push
+      action: publish:github
       input:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.bucket_name }}
