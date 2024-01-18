@@ -16,6 +16,7 @@ spec:
     - title:
       required:
         - bucket_name
+        - name
       properties:
         name:
           title: Service name 
@@ -25,6 +26,10 @@ spec:
           title: Buckek name
           type: string
           description: S3 bucket name
+    - title: Repo setup
+      required:
+        - repoUrl 
+      properties:
         repoUrl:
           title: Repository Location
           type: string
@@ -55,7 +60,6 @@ spec:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.bucket_name }}
         repoUrl: ${{ parameters.repoUrl }}
-        sourcePath:  ./content/terraform
         gitCommitMessage: "[ADDED] webhost terraform stack" 
         branch: master
 
