@@ -63,7 +63,7 @@ spec:
       name: Register
       action: catalog:register
       input:
-        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        repoContentsUrl: ${{ steps['terraform_public'].output.repoContentsUrl }} 
         catalogInfoPath: '/catalog-info.yaml'
 
 
@@ -79,7 +79,7 @@ spec:
   output:
     links:
       - title: Code update 
-        url: ${{ steps['publish'].output.remoteUrl }}
+        url: ${{ steps['terraform_public'].output.remoteUrl }}
       - title: Open in catalog
         icon: catalog
         entityRef: ${{ steps['register'].output.entityRef }}
