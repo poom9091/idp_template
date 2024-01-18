@@ -17,6 +17,10 @@ spec:
       required:
         - bucket_name
       properties:
+        name:
+          title: Service name 
+          type: string
+          description: Service naem
         bucket_name:
           title: Buckek name
           type: string
@@ -29,22 +33,6 @@ spec:
             allowedHosts:
               - github.com
 
-    # - title: Pipeline setup
-    #   properties:
-    #     pipeline_repo:
-    #       title: repository
-    #       type: string
-    #     pipeline_branch:
-    #       title: repo branch
-    #       type: string
-    #     pipeline_engine:
-    #       title: Pipeline engine
-    #       type: string
-    #       default: aws-pipeline
-    #       enum:
-    #         - github-action
-    #         - aws
-
   steps:
     - id: http_test
       name: Fetch terraform code 
@@ -52,7 +40,7 @@ spec:
       input:
         url: ./content
         values:
-          name: ${{ parameters.bucket_name }}
+          name: ${{ parameters.name }}
 
     - id: show_workspace
       name: Show workspace files
@@ -67,8 +55,16 @@ spec:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.bucket_name }}
         repoUrl: ${{ parameters.repoUrl }}
-        targetPath: ./content/terraform
+        sourcePath:  ./content/terraform
+        gitCommitMessage: "[ADDED] webhost terraform stack" 
         branch: master
+
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
 
 
     # # The final step is to register our new component in the catalog.
