@@ -59,11 +59,14 @@ spec:
 
     - id: terraform_public
       name: Publish
-      action: publish:github
+      action: publish:github:push
       input:
         allowedHosts: ['github.com']
         description: This is ${{ parameters.bucket_name }}
         repoUrl: ${{ parameters.repoUrl }}
+        targetPath: ./content/terraform
+        branch: master
+
 
     # # The final step is to register our new component in the catalog.
     # - id: register
