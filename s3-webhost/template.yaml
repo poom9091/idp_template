@@ -22,9 +22,12 @@ spec:
           type: string
           description: S3 bucket name
         repoUrl:
-          title: Repo  
+          title: Repository Location
           type: string
-          description: terraform repo 
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
 
     # - title: Pipeline setup
     #   properties:
