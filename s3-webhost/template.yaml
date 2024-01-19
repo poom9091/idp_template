@@ -61,6 +61,7 @@ spec:
         description: This is ${{ parameters.bucket_name }}
         repoUrl: ${{ parameters.repoUrl }}
         gitCommitMessage: "[ADDED] webhost terraform stack" 
+        sourcePath: ./content/terraform
         branch: master
 
     - id: register
