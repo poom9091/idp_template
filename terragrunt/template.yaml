@@ -2,30 +2,16 @@ apiVersion: scaffolder.backstage.io/v1beta3
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
 kind: Template
 metadata:
-  name: s3-webhost
-  title: S3 webhost
-  description: S3 webhost
+  name: infra-repo 
+  title: Infra repo 
+  description: Setup git repository for manage and providing Infrastructure
   tags:
-    - s3
-    - cloudfront
-    - frontend
+    - terraform 
+    - terragrunt 
 
 spec:
   type: IaC 
   parameters:
-    - title:
-      required:
-        - bucket_name
-        - name
-      properties:
-        name:
-          title: Service name 
-          type: string
-          description: Service naem
-        bucket_name:
-          title: Buckek name
-          type: string
-          description: S3 bucket name
     - title: Repo setup
       required:
         - repoUrl 
@@ -38,22 +24,32 @@ spec:
             allowedHosts:
               - github.com
 
+    - title: Enviornment setup 
+      required:
+        - EnvName
+      properties:
+        EnvName:
+          type: array
+          title: A list of environment
+          minItems: 0
+          ui:options:
+            addable: true
+            orderable: true
+            removable: true
+          items: 
+            type: string
+            default: dev
+
   steps:
     - id: terraform_code 
       name: Fetch terraform code 
       action: fetch:template
+      each: ${{parameters.EnvName}} 
       input:
-        url: ./content/terraform
-        targetPath: ./${{ parameters.name }}
-
-    - id: config_code 
-      name: Fetch config code
-      action: fetch:template
-      input:
-        url: ./content/config
-        targetPath: ./config/${{ parameters.name }}
+        url: ./content
+        targetPath: ./${{ each.value }}
         values: 
-          name: ${{ parameters.bucket_name }}
+          env: ${{ each.value }}
 
     - id: show_workspace
       name: Show workspace files
