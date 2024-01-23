@@ -12,6 +12,26 @@ metadata:
 spec:
   type: IaC 
   parameters:
+    - title: Project config 
+      required:
+        - project_name
+        - aws_region
+      properties:
+        project_name:
+          title: Project Name
+          type: string
+        aws_region:
+          title: AWS region 
+          type: string
+          default: us-east-1
+          enum:
+            - us-east-1
+            - eu-west-2
+          enumNames:
+            - US East (N. Virginia)
+            - Europe (London)
+
+
     - title: Repo setup
       required:
         - repoUrl 
@@ -49,6 +69,8 @@ spec:
         url: ./content
         targetPath: ./${{ each.value }}
         values: 
+          project_name: ${{ parameters.project_name }}
+          aws_region: ${{ parameters.aws_region }}
           env: ${{ each.value }}
 
     - id: show_workspace

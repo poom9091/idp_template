@@ -5,10 +5,10 @@ remote_state {
     if_exists = "overwrite_terragrunt"
   }
   config = {
-    bucket         = "prod-kyozo-terraform-state"
-    key            = "prod-state/${path_relative_to_include()}-state.tfsate"
+    bucket         = "${{ values.env }}-${{ values.project_name }}-terraform-state"
+    key            = "${{ values.env }}-state/${path_relative_to_include()}-state.tfsate"
     dynamodb_table = "dynamo-db-terraform-state-lock"
-    region         = "ap-northeast-1"
+    region         = "${{ values.aws_region }}"
   }
 }
 
@@ -17,12 +17,12 @@ generate "provider"{
   if_exists = "overwrite_terragrunt"
   contents = <<EOF
 provider "aws" {
-  region = "ap-northeast-1"
+  region = "${{ values.aws_region }}"
   default_tags {
     tags = {
-      Environment   = "prod"
+      Environment   = "${{ values.env }}"
       Owner         = "terraform"
-      Project       = "kyozo"
+      Project       = "${{ values.project_name }}"
       Orgranization = "mohara"
       Automate      = "true"
     }
@@ -44,7 +44,7 @@ EOF
 }
 
 inputs = {
-  project_name = "kyozo" 
-  environment  = "prod" 
-  region       = "ap-northeast-1" 
+  project_name = "${{ values.project_name }}" 
+  environment  = "${{ values.env }}" 
+  region       = "${{ values.aws_region }}" 
 }
