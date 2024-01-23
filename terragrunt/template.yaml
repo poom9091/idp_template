@@ -61,6 +61,14 @@ spec:
             default: dev
 
   steps:
+    - id: catatlog_code 
+      name: Fetch catalog 
+      action: fetch:template
+      input:
+        url: ./catalog
+        values: 
+          project_name: ${{ parameters.project_name }}
+
     - id: terraform_code 
       name: Fetch terraform code 
       action: fetch:template
@@ -84,26 +92,17 @@ spec:
       action: publish:github
       input:
         allowedHosts: ['github.com']
-        description: This is ${{ parameters.bucket_name }}
+        description: IaC for  ${{ parameters.project_name }}
         repoUrl: ${{ parameters.repoUrl }}
         gitCommitMessage: "[ADDED] webhost terraform stack" 
         branch: master
 
-#     - id: register
-#       name: Register
-#       action: catalog:register
-#       input:
-#         repoContentsUrl: ${{ steps['terraform_public'].output.repoContentsUrl }} 
-#         catalogInfoPath: '/catalog-info.yaml'
-
-
-    # # The final step is to register our new component in the catalog.
-    # - id: register
-    #   name: Register
-    #   action: catalog:register
-    #   input:
-    #     repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
-    #     catalogInfoPath: '/catalog-info.yaml'
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['terraform_public'].output.repoContentsUrl }} 
+        catalogInfoPath: /catalog-info.yaml
 
   # Outputs are displayed to the user after a successful execution of the template.
   output:
