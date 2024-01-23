@@ -16,10 +16,20 @@ spec:
       required:
         - project_name
         - aws_region
+        - aws_access_key
+        - aws_secret_access_key
       properties:
         project_name:
           title: Project Name
           type: string
+        aws_access_key:
+          title: AWS Access Key 
+          type: string
+          ui:field: Secret
+        aws_secret_access_key:
+          title: AWS Access Secret Key 
+          type: string
+          ui:field: Secret
         aws_region:
           title: AWS region 
           type: string
@@ -61,14 +71,6 @@ spec:
             default: dev
 
   steps:
-    - id: catatlog_code 
-      name: Fetch catalog 
-      action: fetch:template
-      input:
-        url: ./catalog
-        values: 
-          project_name: ${{ parameters.project_name }}
-
     - id: terraform_code 
       name: Fetch terraform code 
       action: fetch:template
@@ -80,6 +82,22 @@ spec:
           project_name: ${{ parameters.project_name }}
           aws_region: ${{ parameters.aws_region }}
           env: ${{ each.value }}
+
+    - id: github_action_code 
+      name: Fetch action 
+      action: fetch:template
+      input:
+        url: ./action
+        targetPath: ./.github/workflows
+
+    - id: catatlog_code 
+      name: Fetch catalog 
+      action: fetch:template
+      input:
+        url: ./catalog
+        targetPath: ./
+        values:  
+          project_name: ${{ parameters.project_name }}
 
     - id: show_workspace
       name: Show workspace files
@@ -96,7 +114,10 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         gitCommitMessage: "[ADDED] webhost terraform stack" 
         branch: master
-
+        secrets:
+          AWS_ACCESS_KEY_ID:  ${{ parameters.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ parameters.aws_secret_access_key }}
+        
     - id: register
       name: Register
       action: catalog:register
